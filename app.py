@@ -7,7 +7,7 @@ st.title("Machine Learning Voorspellingsapp")
 # Laad het model (zorg dat model.pmml in dezelfde map zit)
 @st.cache_resource
 def laad_model():
-    return Model.load('model.pmml')
+    return Model.load('test.pmml')
 
 model = laad_model()
 
