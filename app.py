@@ -1,26 +1,22 @@
 import streamlit as st
-from pypmml import Model
+import pickle
+import numpy as np
 
-# Titel
-st.title("Machine Learning Voorspellingsapp")
+st.title("ML Voorspellingsapp")
 
-# Laad het model (zorg dat model.pmml in dezelfde map zit)
+# Laad het model
 @st.cache_resource
 def laad_model():
-    return Model.load('test.pmml')
+    with open('model.pkl', 'rb') as f:
+        return pickle.load(f)
 
 model = laad_model()
 
-# 🧾 Gebruikersinvoer (pas deze velden aan volgens jouw model)
-leeftijd = st.slider("Leeftijd", min_value=18, max_value=100, value=30)
-inkomen = st.number_input("Inkomen per maand (€)", min_value=0.0, step=100.0)
+# Inputvelden (pas aan op jouw data)
+leeftijd = st.slider("Leeftijd", 18, 100, 30)
+inkomen = st.number_input("Inkomen (€)", min_value=0.0, step=100.0)
 
-# Als er op de knop wordt geklikt:
 if st.button("Voorspel"):
-    input_data = {
-        'leeftijd': leeftijd,
-        'inkomen': inkomen
-    }
-    resultaat = model.predict(input_data)
-    st.subheader("Voorspelling:")
-    st.write(resultaat)
+    input_data = np.array([[leeftijd, inkomen]])
+    voorspelling = model.predict(input_data)
+    st.success(f"Voorspelling: {voorspelling[0]}")
